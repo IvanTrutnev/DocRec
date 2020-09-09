@@ -1,15 +1,18 @@
 const express = require("express");
-const config = require("config");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const bodyParser = require("body-parser");
 
 dotenv.config();
 
 const app = express();
 
-app.use("/api", require("./routes/users"));
+app.use(bodyParser.urlencoded({ extended: true }));
 
-const PORT = config.get("port") || 5000;
+app.use("/api", require("./routes/users"));
+app.use("/api", require("./routes/auth"));
+
+const PORT = process.env.PORT || 5000;
 
 const start = async () => {
   try {

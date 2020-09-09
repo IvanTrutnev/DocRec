@@ -8,7 +8,11 @@ const schema = new Schema({
   email: {
     type: String,
     default: null
+  },
+  password: {
+    type: String,
+    default: null
   }
 });
 
-module.exports = model("User", schema);
+module.exports = model("Users", schema);
