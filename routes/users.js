@@ -1,13 +1,15 @@
-const { Router } = require("express");
-const User = require("../models/User");
+const { Router } = require('express');
+
+const User = require('../models/User');
+
 const router = Router();
 
-router.get("/users", async (req, res) => {
+router.get('/users', async (_, res) => {
   try {
     const users = await User.find();
-    res.json(users)
+    res.json(users);
   } catch (e) {
-    res.status(500).json({ message: "Something went wrong" });
+    res.status(500).json({ message: 'Something went wrong' });
   }
 });
 

@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model } = require('mongoose');
 
 const schema = new Schema({
   name: {
@@ -7,12 +7,12 @@ const schema = new Schema({
   },
   email: {
     type: String,
-    default: null
+    default: null,
   },
   password: {
     type: String,
-    default: null
-  }
+    default: null,
+  },
 });
 
-module.exports = model("Users", schema);
+module.exports = model('Users', schema);
