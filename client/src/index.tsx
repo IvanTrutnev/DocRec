@@ -4,16 +4,16 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-import SignUp from './pages/sign-up/SignUp'
-import Dashboard from './pages/dashboard/Dashboard'
+import SignUp from './pages/sign-up/SignUp';
+import Dashboard from './pages/dashboard/Dashboard';
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <App>
         <Switch>
-          <Route exact path='/' component={Dashboard} />
-          <Route path='/sign-up' component={SignUp} />
+          <Route exact path="/" component={Dashboard} />
+          <Route path="/sign-up" component={SignUp} />
         </Switch>
       </App>
     </BrowserRouter>

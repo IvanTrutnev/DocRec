@@ -1,9 +1,5 @@
 import React from 'react';
 
-const App: React.FC = ({ children }) => (
-  <>
-    {children}
-  </>
-)
+const App: React.FC = ({ children }) => <>{children}</>;
 
 export default App;
