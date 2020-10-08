@@ -8,16 +8,16 @@ import SignUp from './pages/sign-up/SignUp';
 import Dashboard from './pages/dashboard/Dashboard';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <App>
-        <Switch>
-          <Route exact path="/" component={Dashboard} />
-          <Route path="/sign-up" component={SignUp} />
-        </Switch>
-      </App>
-    </BrowserRouter>
-  </React.StrictMode>,
+  //<React.StrictMode>
+  <BrowserRouter>
+    <App>
+      <Switch>
+        <Route exact path="/" component={Dashboard} />
+        <Route path="/sign-up" component={SignUp} />
+      </Switch>
+    </App>
+  </BrowserRouter>,
+  //</React.StrictMode>,
   document.getElementById('root')
 );
 
