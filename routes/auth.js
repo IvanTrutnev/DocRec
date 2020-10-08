@@ -1,13 +1,14 @@
 const { Router } = require('express');
 
 const router = Router();
-const User = require('../models/User')
+const User = require('../models/User');
 
 router.post('/users/sign-up', async (req, res) => {
   try {
-    const { email, name } = req.body;
+    const { email, name, password } = req.body;
+    console.log(req.body);
     const isRegisteredUser = await User.findOne({ email });
-
+    console.log(isRegisteredUser);
     if (isRegisteredUser) {
       res.status(200).json({ message: 'User with that email is already registered' });
       return;
