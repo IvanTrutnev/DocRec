@@ -1,0 +1,8 @@
+@media (max-width: 575px) {
+  .form {
+    padding: 10px;
+  }
+  .ant-form-item-control {
+    margin: 0;
+  }
+}

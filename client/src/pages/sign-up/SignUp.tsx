@@ -1,6 +1,10 @@
 import React from 'react';
 import * as CSS from 'csstype';
 import { Form, Input, Button, Checkbox } from 'antd';
+import './SignUp.css';
+import config from '../../config';
+
+const { rootApi } = config;
 
 const layout = {
   labelCol: { span: 8 },
@@ -11,12 +15,34 @@ const tailLayout = {
 };
 
 const styles: CSS.Properties = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
   height: '100%',
+};
+
+const form: CSS.Properties = {
+  width: '100%',
 };
 
 const SignUp: React.FC = () => {
   const onFinish = (values: any) => {
     console.log('Success:', values);
+    fetch(`${rootApi}/api/users/sign-up`, {
+      method: 'post',
+      headers: {
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(values),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -30,13 +56,15 @@ const SignUp: React.FC = () => {
         initialValues={{ remember: true }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
+        style={form}
+        className="form"
       >
         <Form.Item
-          label="Username"
-          name="username"
-          rules={[{ required: true, message: 'Please input your username!' }]}
+          label="Email"
+          name="email"
+          rules={[{ required: true, message: 'Please input your email!' }]}
         >
-          <Input />
+          <Input type="email" />
         </Form.Item>
 
         <Form.Item
