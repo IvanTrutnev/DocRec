@@ -24,4 +24,28 @@ router.post('/users/sign-up', async (req, res) => {
   }
 });
 
+router.post('/users/sign-in', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      res.status(400).json({ message: 'This user in nor regustered' });
+      return;
+    }
+
+    const match = await bcrypt.compare(password, user.password);
+
+    if (!match) {
+      res.status(400).json({ message: 'Invalid password' });
+      return;
+    }
+
+    res.status(200).json(user);
+  } catch (e) {
+    res.status(500).json({ message: 'Something went wrong' });
+  }
+});
+
 module.exports = router;
