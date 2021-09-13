@@ -3,9 +3,9 @@ import { useHistory } from 'react-router';
 import * as CSS from 'csstype';
 import { Form, Input, Button, Checkbox } from 'antd';
 
-import { signUp } from '../../services/auth';
+import { signIn } from '../../services/auth';
 
-import './SignUp.css';
+import './SignIn.css';
 
 const layout = {
   labelCol: { span: 8 },
@@ -27,12 +27,16 @@ const form: CSS.Properties = {
   width: '100%',
 };
 
-const SignUp: React.FC = () => {
+const SignIn: React.FC = () => {
   const history = useHistory();
 
   const onFinish = async (values: any) => {
-    await signUp(values);
-    history.push('/');
+    try {
+      await signIn(values);
+      history.push('/');
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -49,14 +53,6 @@ const SignUp: React.FC = () => {
         style={form}
         className="form"
       >
-        <Form.Item
-          label="Username"
-          name="username"
-          rules={[{ required: true, message: 'Please input your username' }]}
-        >
-          <Input type="text" />
-        </Form.Item>
-
         <Form.Item
           label="Email"
           name="email"
@@ -79,7 +75,7 @@ const SignUp: React.FC = () => {
 
         <Form.Item {...tailLayout}>
           <Button type="primary" htmlType="submit">
-            Sign up
+            Sign in
           </Button>
         </Form.Item>
       </Form>
@@ -87,4 +83,4 @@ const SignUp: React.FC = () => {
   );
 };
 
-export default SignUp;
+export default SignIn;

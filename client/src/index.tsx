@@ -6,6 +6,7 @@ import * as serviceWorker from './serviceWorker';
 
 import SignUp from './pages/sign-up/SignUp';
 import Dashboard from './pages/dashboard/Dashboard';
+import SignIn from './pages/sign-in/SignIn';
 
 ReactDOM.render(
   //<React.StrictMode>
@@ -14,6 +15,7 @@ ReactDOM.render(
       <Switch>
         <Route exact path="/" component={Dashboard} />
         <Route path="/sign-up" component={SignUp} />
+        <Route path="/sign-in" component={SignIn} />
       </Switch>
     </App>
   </BrowserRouter>,
