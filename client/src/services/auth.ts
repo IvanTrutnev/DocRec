@@ -5,11 +5,11 @@ type Data = {
 };
 
 const signUp = (data: Data) => {
-  return call({ method: 'POST', url: 'users/sign-up', data });
+  return call({ method: 'POST', url: 'sign-up', data });
 };
 
 const signIn = (data: Data) => {
-  return call({ method: 'POST', url: 'users/sign-in', data });
+  return call({ method: 'POST', url: 'sign-in', data });
 };
 
 export { signUp, signIn };

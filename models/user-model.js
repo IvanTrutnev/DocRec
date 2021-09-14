@@ -13,6 +13,8 @@ const schema = new Schema({
     type: String,
     default: null,
   },
+  isActivated: { type: Boolean, default: false },
+  activationLink: { type: String },
 });
 
-module.exports = model('Users', schema);
+module.exports = model('User', schema);
