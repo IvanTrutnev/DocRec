@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const authServise = require('../services/auth-service');
+
 const User = require('../models/user-model');
 
 const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || 5000;
@@ -11,23 +13,10 @@ class AuthController {
   async signUp(req, res) {
     try {
       const { email, password, username } = req.body;
-      const isRegisteredUser = await User.findOne({ email });
-      if (isRegisteredUser) {
-        res
-          .status(200)
-          .json({ message: 'User with that email is already registered' });
-        return;
-      }
-      const hash = await bcrypt.hash(password, 10);
-      const user = new User({
-        email,
-        password: hash,
-        username,
-      });
-      await user.save();
-      res.status(201).json(user);
+      const userData = await authServise.signUp({ email, password, username });
+      res.status(201).json(userData);
     } catch (e) {
-      res.status(500).json({ message: 'Something went wrong' });
+      res.status(500).json({ message: e });
     }
   }
 
