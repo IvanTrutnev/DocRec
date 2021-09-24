@@ -31,7 +31,9 @@ class AuthService {
       activationLink,
     });
 
-    await mailService.sendActivationMail(email, activationLink);
+    const link = `${process.env.API_URL}/api/activate/${activationLink}`;
+
+    await mailService.sendActivationMail(email, link);
 
     const userDto = new UserDto(user);
 
@@ -50,22 +52,30 @@ class AuthService {
     };
   }
 
-  async signIn(req, res) {
-    try {
-      const { email, password } = req.body;
+  async activate(link) {
+    const user = await User.findOne({ activationLink: link });
 
+    if (!user) {
+      throw new Error('Incorrect activation link');
+    }
+
+    user.isActivated = true;
+    await user.save();
+  }
+
+  async signIn({ email, password }) {
+    try {
       const user = await User.findOne({ email }).lean();
 
       if (!user) {
-        res.status(400).json({ message: 'This user in nor registered' });
-        return;
+        // res.status(400).json({ message: 'This user in nor registered' });
+        throw 'User with this email is already exsist';
       }
 
       const match = await bcrypt.compare(password, user.password);
 
       if (!match) {
-        res.status(400).json({ message: 'Invalid password' });
-        return;
+        throw 'Validation error';
       }
 
       const accessToken = jwt.sign({ email, password }, JWT_ACCESS_SECRET, {
@@ -81,6 +91,7 @@ class AuthService {
       res.status(500).json({ message: 'Something went wrong' });
     }
   }
+
   async logout(req, res, next) {}
   async refresh(req, res, next) {}
 }

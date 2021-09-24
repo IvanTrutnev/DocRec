@@ -14,6 +14,10 @@ class AuthController {
     try {
       const { email, password, username } = req.body;
       const userData = await authServise.signUp({ email, password, username });
+      res.cookie('refreshToken', userData.refreshToken, {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      });
       res.status(201).json(userData);
     } catch (e) {
       res.status(500).json({ message: e });
@@ -51,6 +55,19 @@ class AuthController {
       res.status(500).json({ message: 'Something went wrong' });
     }
   }
+
+  async activate(req, res) {
+    console.log('req');
+    try {
+      const activationLink = req.params.link;
+      console.log(req.params.link);
+      await authServise.activate(activationLink);
+      return res.redirect(process.env.CLIENT_URL);
+    } catch (e) {
+      res.status(500).json({ message: 'Something went wrong' });
+    }
+  }
+
   async logout(req, res, next) {}
   async refresh(req, res, next) {}
 }
