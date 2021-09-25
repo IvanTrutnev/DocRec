@@ -4,6 +4,8 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
+const errorMiddlewre = require('./middlewares/error-middleware');
+
 dotenv.config();
 
 const app = express();
@@ -16,6 +18,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api', require('./routes/users'));
 app.use('/api', require('./routes/auth'));
+
+app.use(errorMiddlewre);
 
 const PORT = process.env.PORT || 5000;
 

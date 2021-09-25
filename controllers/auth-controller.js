@@ -10,7 +10,7 @@ const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || 5000;
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 5000;
 
 class AuthController {
-  async signUp(req, res) {
+  async signUp(req, res, next) {
     try {
       const { email, password, username } = req.body;
       const userData = await authServise.signUp({ email, password, username });
@@ -20,7 +20,7 @@ class AuthController {
       });
       res.status(201).json(userData);
     } catch (e) {
-      res.status(500).json({ message: e });
+      next(e);
     }
   }
 
@@ -56,19 +56,18 @@ class AuthController {
     }
   }
 
-  async activate(req, res) {
-    console.log('req');
+  async activate(req, res, next) {
     try {
       const activationLink = req.params.link;
-      console.log(req.params.link);
       await authServise.activate(activationLink);
       return res.redirect(process.env.CLIENT_URL);
     } catch (e) {
-      res.status(500).json({ message: 'Something went wrong' });
+      next(e);
     }
   }
 
   async logout(req, res, next) {}
+
   async refresh(req, res, next) {}
 }
 
