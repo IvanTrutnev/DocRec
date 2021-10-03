@@ -67,31 +67,33 @@ class AuthService {
   }
 
   async signIn({ email, password }) {
-    try {
-      const user = await User.findOne({ email }).lean();
+    const user = await User.findOne({ email });
 
-      if (!user) {
-        throw ApiError.BadRequest('User with this email is already exsist');
-      }
-
-      const match = await bcrypt.compare(password, user.password);
-
-      if (!match) {
-        throw ApiError.BadRequest('Validation error');
-      }
-
-      const accessToken = jwt.sign({ email, password }, JWT_ACCESS_SECRET, {
-        expiresIn: '30m',
-      });
-
-      const refreshToken = jwt.sign({ email, password }, JWT_REFRESH_SECRET, {
-        expiresIn: '30d',
-      });
-
-      res.status(200).json({ ...user, accessToken, refreshToken });
-    } catch (e) {
-      res.status(500).json({ message: 'Something went wrong' });
+    if (!user) {
+      throw ApiError.BadRequest('User with this email is already exsist');
     }
+
+    const match = await bcrypt.compare(password, user.password);
+
+    if (!match) {
+      throw ApiError.BadRequest('Incorrect password');
+    }
+
+    const userDto = new UserDto(user);
+
+    const { refreshToken, accessToken } = await tokenService.generateToken({
+      ...userDto,
+    });
+
+    await tokenService.saveToken(userDto.id, refreshToken);
+
+    await user.save();
+
+    return {
+      refreshToken,
+      accessToken,
+      user: userDto,
+    };
   }
 
   async logout(req, res, next) {}

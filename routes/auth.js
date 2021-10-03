@@ -1,10 +1,16 @@
 const { Router } = require('express');
+const { body } = require('express-validator');
 
 const router = Router();
 
 const authController = require('../controllers/auth-controller');
 
-router.post('/sign-up', authController.signUp);
+router.post(
+  '/sign-up',
+  body('email').isEmail(),
+  body('password').isLength({ min: 3, max: 32 }),
+  authController.signUp
+);
 
 router.post('/sign-in', authController.signIn);
 

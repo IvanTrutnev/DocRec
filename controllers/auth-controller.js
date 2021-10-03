@@ -1,17 +1,15 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const { validationResult } = require('express-validator');
 
 const authServise = require('../services/auth-service');
-
-const User = require('../models/user-model');
-
-const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || 5000;
-
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 5000;
+const ApiError = require('../exceptions/api-error');
 
 class AuthController {
   async signUp(req, res, next) {
     try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return next(ApiError.BadRequest('Validation error', errors.array()));
+      }
       const { email, password, username } = req.body;
       const userData = await authServise.signUp({ email, password, username });
       res.cookie('refreshToken', userData.refreshToken, {
@@ -24,35 +22,17 @@ class AuthController {
     }
   }
 
-  async signIn(req, res) {
+  async signIn(req, res, next) {
     try {
-      const { email, password } = req.body;
-
-      const user = await User.findOne({ email }).lean();
-
-      if (!user) {
-        res.status(400).json({ message: 'This user in nor registered' });
-        return;
-      }
-
-      const match = await bcrypt.compare(password, user.password);
-
-      if (!match) {
-        res.status(400).json({ message: 'Invalid password' });
-        return;
-      }
-
-      const accessToken = jwt.sign({ email, password }, JWT_ACCESS_SECRET, {
-        expiresIn: '30m',
+      const { email, password, username } = req.body;
+      const userData = await authServise.signIn({ email, password, username });
+      res.cookie('refreshToken', userData.refreshToken, {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
       });
-
-      const refreshToken = jwt.sign({ email, password }, JWT_REFRESH_SECRET, {
-        expiresIn: '30d',
-      });
-
-      res.status(200).json({ ...user, accessToken, refreshToken });
+      res.status(200).json(userData);
     } catch (e) {
-      res.status(500).json({ message: 'Something went wrong' });
+      next(e);
     }
   }
 
